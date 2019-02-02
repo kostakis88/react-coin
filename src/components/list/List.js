@@ -3,6 +3,7 @@ import {handleResponse} from '../../helpers';
 import {API_URL} from '../../config';
 import Loading from '../common/Loading';
 import Table from './Table';
+import Pagination from './Pagination';
 
 class List extends React.Component {
     constructor () {
@@ -10,20 +11,28 @@ class List extends React.Component {
         this.state = {
             loading: false,
             currencies: [],
-            error: null
+            error: null,
+            totalPages: 0,
+            page: 1
         };
+
+        this.handlePaginationClick = this.handlePaginationClick.bind(this);
     }
 
     componentDidMount() {
+        this.fetchCurrencies();
+    }
 
+    fetchCurrencies() {
         this.setState({ loading: true });
 
-        fetch(`${API_URL}/cryptocurrencies?page=1&perPage=20`)
+        fetch(`${API_URL}/cryptocurrencies?page=${this.state.page}&perPage=20`)
             .then(handleResponse)
             .then((data) => {
-
+  
                 this.setState({ 
-                    currencies: data.currencies, 
+                    currencies: data.currencies,
+                    totalPages: data.totalPages, 
                     loading: false 
                 });
 
@@ -48,6 +57,16 @@ class List extends React.Component {
         }
     }
 
+    handlePaginationClick(direction) {
+        let nextPage = this.state.page;
+
+        nextPage = direction === 'next' ? nextPage + 1 : nextPage - 1;
+
+        this.setState({ page: nextPage }, () => {
+            this.fetchCurrencies();
+        });
+    }
+
     render() {
         //render only loading component, if loading is set to true
         if (this.state.loading) {
@@ -63,10 +82,17 @@ class List extends React.Component {
         }
 
         return (
-           <Table 
-                currencies = {this.state.currencies}
-                renderChangePercent = {this.renderChangePercent}
-           />
+            <div>
+                <Table 
+                    currencies = {this.state.currencies}
+                    renderChangePercent = {this.renderChangePercent}
+                />
+                <Pagination 
+                    totalPages = {this.state.totalPages}
+                    page = {this.state.page}
+                    handlePaginationClick = {this.handlePaginationClick}
+                />
+            </div>
         );
     }
 }
