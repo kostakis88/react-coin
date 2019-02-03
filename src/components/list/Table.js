@@ -1,5 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
+import { renderChangePercent } from '../../helpers';
 import PropTypes from 'prop-types';
 import './Table.css';
 
@@ -34,7 +35,7 @@ const Table = (props) => {
                         {currency.marketCap}
                     </td>
                     <td>
-                        {props.renderChangePercent(currency.percentChange24h)}
+                        {renderChangePercent(currency.percentChange24h)}
                     </td>
                 </tr>
             ))}
@@ -47,7 +48,6 @@ const Table = (props) => {
 
 Table.propTypes = {
     currencies: PropTypes.array.isRequired,
-    renderChangePercent: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired
 }
 
