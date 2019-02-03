@@ -4,8 +4,9 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Header from './components/common/Header';
 import List from './components/list/List';
 import NotFound from './components/notfound/NotFound';
-import './index.css';
 import Detail from './components/detail/Detail';
+import './index.css';
+
 
 const App = () => {
     return (
